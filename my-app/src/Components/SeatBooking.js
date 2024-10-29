@@ -11,13 +11,27 @@ const SeatBooking = () => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [message, setMessage] = useState("");
 
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     // Fetch seats data from the server
     axios
-      .get("http://localhost:5000/seats")
+      .get(`${apiUrl}/seats`) // Use the apiUrl
       .then((res) => setSeats(res.data))
       .catch((err) => console.error("Error fetching seats:", err));
-  }, [reservedSeats]);
+  }, [reservedSeats, apiUrl]);
+
+  const handleNumSeatsChange = (e) => {
+    const value = parseInt(e.target.value, 10);
+
+    if (value > 7) {
+      setNumSeats(7); // Automatically set to 7
+    } else if (value < 1) {
+      setNumSeats(1); // Automatically set to 1
+    } else {
+      setNumSeats(value); // Update with the valid input
+    }
+  };
 
   const generatePDF = (seatsList) => {
     const doc = new jsPDF();
@@ -62,11 +76,8 @@ const SeatBooking = () => {
     doc.setFontSize(12);
     doc.text(`Train ID: ${trainID}`, 10, 40);
     doc.text(`PNR: ${pnr}`, 150, 40);
-
     doc.text(`Passenger Name: ${passengerName}`, 10, 50);
     doc.text(`Date: ${date}`, 150, 50);
-
-    // Random station names
     doc.text(`From: ${sourceStation}`, 10, 60);
     doc.text(`To: ${destinationStation}`, 150, 60);
 
@@ -109,7 +120,7 @@ const SeatBooking = () => {
 
   const reserveSeats = () => {
     axios
-      .post("http://localhost:5000/reserve", { numberOfSeats: numSeats })
+      .post(`${apiUrl}/reserve`, { numberOfSeats: numSeats })
       .then((res) => {
         setMessage(`Seats reserved: ${res.data.seats.join(", ")}`);
         setReservedSeats(res.data.seats);
@@ -123,7 +134,7 @@ const SeatBooking = () => {
 
   const cancelReservation = () => {
     axios
-      .post("http://localhost:5000/cancel", { seatNumbers: selectedSeats })
+      .post(`${apiUrl}/cancel`, { seatNumbers: selectedSeats })
       .then((res) => {
         setMessage(res.data.message);
         setSeats((prevSeats) =>
@@ -140,7 +151,7 @@ const SeatBooking = () => {
 
   const resetReservation = () => {
     axios
-      .get("http://localhost:5000/reset-seats")
+      .get(`${apiUrl}/reset-seats`)
       .then((response) => {
         setMessage(response.data.message);
         window.location.reload();
@@ -181,7 +192,7 @@ const SeatBooking = () => {
             <Form.Control
               type="number"
               value={numSeats}
-              onChange={(e) => setNumSeats(e.target.value)}
+              onChange={handleNumSeatsChange}
               min="1"
               max="7"
             />
