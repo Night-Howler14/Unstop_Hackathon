@@ -1,0 +1,41 @@
+.title {
+    font-family: 'Poppins', sans-serif; /* A modern font */
+    font-size: 3rem; /* Make the font size large */
+    font-weight: bold; /* Bold text */
+    color: grey; /* Dark color for the text */
+    text-align: center; /* Center the text */
+    margin-top: 20px;
+    text-transform: uppercase; /* Uppercase styling */
+    letter-spacing: 3px; /* Add some letter spacing */
+}
+
+.seat-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: 10px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  .seat {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+  }
+  .seat:hover {
+    background-color: #e9ecef;
+  }
+  .booked {
+    background-color: #dc3545;
+    color: white;
+  }
+  .selected {
+    background-color: #28a745;
+    color: white;
+  }
